@@ -67,6 +67,8 @@ namespace ApiService.Websocket
             Console.Write(parsed);
             Debug.Write(parsed);
             await _comfyUiHub.Clients.All.SendAsync("ExecutedMessage", promptId, parsed.Data, ct);
+          }else if(parsed.Type == "execution_interrupted"){
+            await _comfyUiHub.Clients.All.SendAsync("Interrupted", promptId, parsed.Data, ct);
           }
         }
       }

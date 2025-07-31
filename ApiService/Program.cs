@@ -25,6 +25,7 @@ namespace ApiService
       builder.Services.AddSingleton<IConfiguration>(Configuration);
       builder.Services.AddSingleton<ComfyUISocketListener>();
       builder.Services.AddTransient<PromptRestService>();
+      builder.Services.AddTransient<ImageProcessService>();
       var app = builder.Build();
       var comfyListener = app.Services.GetRequiredService<ComfyUISocketListener>();
       Task.Run(()=> comfyListener.StartAsync());

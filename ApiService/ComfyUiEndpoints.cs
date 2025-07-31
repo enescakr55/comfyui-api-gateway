@@ -57,14 +57,17 @@ namespace ApiService
         {
           return Results.NotFound("Scheme not found");
         }
+        var imageProcessService = httpContext.RequestServices.GetRequiredService<ImageProcessService>();
         var originalImg = request.Form.Files["image"];
         var mask = request.Form.Files["mask"];
         if(originalImg == null || mask == null){
           throw new ArgumentNullException("Please check Image or Mask arguments");
         }
-        
-        var originalImgId = restService.UploadImage(originalImg.FileName, originalImg.OpenReadStream()).Name;
-        var maskId = restService.UploadImage(mask.FileName, mask.OpenReadStream()).Name;
+
+        var resizedOriginalImage = imageProcessService.ResizeImageIfLimitsExceed(originalImg.OpenReadStream());
+        var resizedMaskImage = imageProcessService.ResizeImageIfLimitsExceed(mask.OpenReadStream());
+        var originalImgId = restService.UploadImage(originalImg.FileName, resizedOriginalImage).Name;
+        var maskId = restService.UploadImage(mask.FileName, resizedMaskImage).Name;
         promptContent = promptContent.Replace("{positive-prompt}", request.Form["positive"]);
         promptContent = promptContent.Replace("{negative-prompt}", request.Form["negative"]);
         promptContent = promptContent.Replace("{original-image}", originalImgId);
