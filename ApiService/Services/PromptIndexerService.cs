@@ -64,8 +64,24 @@ namespace ApiService.Services
     {
       return _text_to_image_prompts;
     }
+    public IDictionary<string, string> GetImageToImagePrompts()
+    {
+      return _image_to_image_prompts;
+    }
+    public IDictionary<string, string> GetTextToVideoPrompts()
+    {
+      return _text_to_video_prompts;
+    }
     public string? GetTextToImagePrompt(string promptName){
       var isAvailabe = _text_to_image_prompts.TryGetValue(promptName, out var content);
+      return content;
+    }   
+    public string? GetImageToImagePrompt(string promptName){
+      var isAvailabe = _image_to_image_prompts.TryGetValue(promptName, out var content);
+      return content;
+    }
+    public string? GetTextToVideoPrompt(string promptName){
+      var isAvailabe = _text_to_video_prompts.TryGetValue(promptName, out var content);
       return content;
     }
 
