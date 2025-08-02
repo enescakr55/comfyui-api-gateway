@@ -14,10 +14,12 @@ namespace ApiService.Websocket
   {
     private readonly IConfiguration _configuration;
     private readonly IHubContext<ComfyUiHub> _comfyUiHub;
-    public ComfyUISocketListener(IConfiguration configuration, IHubContext<ComfyUiHub> comfyUiHub)
+    private readonly PromptRestService _promptRestService;
+    public ComfyUISocketListener(IConfiguration configuration, IHubContext<ComfyUiHub> comfyUiHub, PromptRestService promptRestService)
     {
       _configuration = configuration;
       _comfyUiHub = comfyUiHub;
+      _promptRestService = promptRestService;
     }
     public async Task StartAsync(CancellationToken ct = default)
     {
@@ -66,9 +68,16 @@ namespace ApiService.Websocket
           {
             Console.Write(parsed);
             Debug.Write(parsed);
+
+
             await _comfyUiHub.Clients.All.SendAsync("ExecutedMessage", promptId, parsed.Data, ct);
           }else if(parsed.Type == "execution_interrupted"){
             await _comfyUiHub.Clients.All.SendAsync("Interrupted", promptId, parsed.Data, ct);
+          }else if(parsed.Type == "execution_success"){
+            if (promptId != null)
+            {
+              var output = _promptRestService.GetOutputFileName(promptId);
+            }
           }
         }
       }

@@ -16,6 +16,18 @@ namespace ApiService
         var keys = schemes.Keys.ToList();
         return Results.Ok(keys);
       });
+      app.MapGet("api/test/getfilename", (HttpContext httpContext) =>
+      {
+        var restService = app.Services.GetRequiredService<PromptRestService>();
+        var fname =restService.GetOutputFileName("7ebdbe1a-4663-4648-9a62-e21fa711e6a0");
+        Results.Ok(fname);
+      }).Produces<string>(200);
+      app.MapGet("api/v1/comfy-ui/images/view/{filename}", (HttpContext httpContext,string filename) =>
+      {
+        var restService = app.Services.GetRequiredService<PromptRestService>();
+        var output = restService.GetOutputFile(filename);
+        return Results.File(output, "image/png");
+      });
       app.MapGet("api/v1/comfy-ui/image-to-image/schemes", (HttpContext httpContext) =>
       {
         var schemes = PromptIndexerService.Instance.GetImageToImagePrompts();
@@ -40,6 +52,7 @@ namespace ApiService
         promptContent = promptContent.Replace("{negative-prompt}", request.Negative);
         promptContent = promptContent.Replace("{client-id}", ComfyClientIdService.Instance.GetId());
         promptContent = promptContent.Replace("\"{seed}\"", GenerateSeed());
+        promptContent = promptContent.Replace("{uuid}", Guid.NewGuid().ToString("N"));
         var jsonObj = JsonSerializer.Deserialize<object>(promptContent);
         if (jsonObj == null)
         {
@@ -72,6 +85,7 @@ namespace ApiService
         promptContent = promptContent.Replace("{negative-prompt}", request.Form["negative"]);
         promptContent = promptContent.Replace("{original-image}", originalImgId);
         promptContent = promptContent.Replace("{mask-image}", maskId);
+        promptContent = promptContent.Replace("{uuid}", Guid.NewGuid().ToString("N"));
         promptContent = promptContent.Replace("{client-id}", ComfyClientIdService.Instance.GetId());
         promptContent = promptContent.Replace("\"{seed}\"", GenerateSeed());
         var jsonObj = JsonSerializer.Deserialize<object>(promptContent);
