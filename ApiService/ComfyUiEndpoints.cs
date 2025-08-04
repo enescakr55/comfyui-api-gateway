@@ -61,7 +61,7 @@ namespace ApiService
         var restService = app.Services.GetRequiredService<PromptRestService>();
         var result = restService.SendPrompt(jsonObj);
         return Results.Ok(result);
-      });
+      }).Produces<PromptResponse>();
       app.MapPost("/api/v1/comfy-ui/image-to-image/schemes/{scheme}/generate", (HttpContext httpContext, string scheme, HttpRequest request) =>
       {
         var restService = app.Services.GetRequiredService<PromptRestService>();
@@ -98,7 +98,7 @@ namespace ApiService
         return Results.Ok(result);
       }).Accepts<GenerateImageToImageRequest>("multipart/form-data").Produces(200);
       
-      app.MapPost("/api/v1/comfy-ui/image-to-image/image-upload", (HttpContext httpContext) =>
+      /*app.MapPost("/api/v1/comfy-ui/image-to-image/image-upload", (HttpContext httpContext) =>
       {
 
         var restService = app.Services.GetRequiredService<PromptRestService>();
@@ -106,7 +106,7 @@ namespace ApiService
         var stream = imageData.OpenReadStream();
         var response = restService.UploadImage(imageData.FileName, stream);
         Results.Ok(response);
-      }).Accepts<FormFile>("multipart/form-data").Produces<ImageUploadResponse>();
+      }).Accepts<FormFile>("multipart/form-data").Produces<ImageUploadResponse>();*/
       return app;
     }
     private static string GenerateSeed()
