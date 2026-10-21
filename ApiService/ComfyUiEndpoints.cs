@@ -16,15 +16,19 @@ namespace ApiService
         var keys = schemes.Keys.ToList();
         return Results.Ok(keys);
       });
-      app.MapGet("api/test/getfilename", (HttpContext httpContext) =>
+      /*app.MapGet("api/v1/comfy-ui/images/{promptId}/name", (HttpContext httpContext,string promptId) =>
       {
         var restService = app.Services.GetRequiredService<PromptRestService>();
-        var fname =restService.GetOutputFileName("7ebdbe1a-4663-4648-9a62-e21fa711e6a0");
+        var fname =restService.GetOutputFileName(promptId);
         Results.Ok(fname);
-      }).Produces<string>(200);
-      app.MapGet("api/v1/comfy-ui/images/view/{filename}", (HttpContext httpContext,string filename) =>
+      }).Produces<string>(200);*/
+      app.MapGet("api/v1/comfy-ui/images/{promptId}/view", (HttpContext httpContext,string promptId) =>
       {
         var restService = app.Services.GetRequiredService<PromptRestService>();
+        var filename = restService.GetOutputFileName(promptId);
+        if(filename == null){
+          return Results.NotFound("File not found");
+        }
         var output = restService.GetOutputFile(filename);
         return Results.File(output, "image/png");
       });
@@ -97,16 +101,7 @@ namespace ApiService
         var result = restService.SendPrompt(jsonObj);
         return Results.Ok(result);
       }).Accepts<GenerateImageToImageRequest>("multipart/form-data").Produces(200);
-      
-      /*app.MapPost("/api/v1/comfy-ui/image-to-image/image-upload", (HttpContext httpContext) =>
-      {
-
-        var restService = app.Services.GetRequiredService<PromptRestService>();
-        var imageData = httpContext.Request.Form.Files[0];
-        var stream = imageData.OpenReadStream();
-        var response = restService.UploadImage(imageData.FileName, stream);
-        Results.Ok(response);
-      }).Accepts<FormFile>("multipart/form-data").Produces<ImageUploadResponse>();*/
+     
       return app;
     }
     private static string GenerateSeed()

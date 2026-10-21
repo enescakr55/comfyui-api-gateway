@@ -29,7 +29,6 @@ namespace ApiService.Websocket
       {
         return;
       }
-      Debug.WriteLine("start'a girdi");
       var wsClientIdParameter = "?clientId=" + ComfyClientIdService.Instance.GetId();
       var wsConnectUri = new Uri(wsUrl + wsClientIdParameter);
 
@@ -43,7 +42,7 @@ namespace ApiService.Websocket
       var buffer = ArrayPool<byte>.Shared.Rent(64 * 1024);
       try
       {
-        Debug.WriteLine("try a girdi");
+
         while (!ct.IsCancellationRequested && ws.State == WebSocketState.Open)
         {
           var result = await ws.ReceiveAsync(buffer.AsMemory(), ct);
@@ -52,7 +51,6 @@ namespace ApiService.Websocket
             await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed by client", ct);
             break;
           }
-          Debug.WriteLine("while'a girdi");
           var msg = Encoding.UTF8.GetString(buffer, 0, result.Count);
           var parsed = ParseWsMessage(msg);
           var promptId = ParsePromptId(parsed.Data ?? "{}");
@@ -70,12 +68,13 @@ namespace ApiService.Websocket
             Debug.Write(parsed);
 
 
-            await _comfyUiHub.Clients.All.SendAsync("ExecutedMessage", promptId, parsed.Data, ct);
+            
           }else if(parsed.Type == "execution_interrupted"){
             await _comfyUiHub.Clients.All.SendAsync("Interrupted", promptId, parsed.Data, ct);
           }else if(parsed.Type == "execution_success"){
             if (promptId != null)
             {
+              await _comfyUiHub.Clients.All.SendAsync("ExecutedMessage", promptId, parsed.Data, ct);
               var output = _promptRestService.GetOutputFileName(promptId);
             }
           }
@@ -124,7 +123,7 @@ namespace ApiService.Websocket
         {
           data = d.ToString();
         }
-        // ComfyUI tarafında farklı alanlar gelebilir: "data", "status", "node_id", vs.
+
         return new WsMessage
         {
           Type = type ?? "unknown",
