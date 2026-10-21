@@ -14,13 +14,10 @@ Proje ayrıca görüntü üretim durumlarının WebSocket üzerinden takip edilm
 
 - **Metinden görüntü üretimi:** Tanımlı bir iş akışına pozitif ve negatif prompt gönderilmesi.
 - **Görüntüden görüntü üretimi:** Kaynak görüntü ve maske dosyalarının yüklenerek bir iş akışına aktarılması.
-- **İş akışı seçimi:** Metinden görüntü, görüntüden görüntü ve metinden video kategorilerindeki mevcut şemaların listelenmesi.
+- **İş akışı seçimi:** Metinden görüntü, görüntüden görüntü kategorilerindeki mevcut şemaların listelenmesi.
 - **Görüntü boyutlandırma:** Yapılandırılmış sınırları aşan görüntülerin yeniden boyutlandırılması.
 - **Üretim çıktısına erişim:** Tamamlanmış bir üretimin görüntüsünün API üzerinden alınması.
 - **Gerçek zamanlı bildirimler:** ComfyUI WebSocket mesajlarının SignalR hub üzerinden istemcilere iletilmesi.
-- **Swagger/OpenAPI desteği:** Geliştirme ortamında API dokümantasyonunun görüntülenmesi.
-
-Not: Metinden video kategorisi için şema listeleme endpoint'i bulunmaktadır. Bu, video üretim endpoint'inin de uygulandığı anlamına gelmez.
 
 ## 3. Teknoloji Altyapısı
 
@@ -124,7 +121,7 @@ Content-Type: application/json
 5. ComfyUI'nin `/prompt` endpoint'ine gönderilir.
 6. ComfyUI yanıtı istemciye döndürülür.
 
-Şema bulunamazsa `404 Not Found`, prompt JSON'u oluşturulamazsa `400 Bad Request` döndürülür. ComfyUI isteğinin başarısız olması durumunda mevcut servis bir istisna fırlatır.
+Şema bulunamazsa `404 Not Found`, prompt JSON'u oluşturulamazsa `400 Bad Request` döndürülür. ComfyUI isteğinin başarısız olması durumunda mevcut servis bir hata döndürür.
 
 ### 5.2. Görüntüden Görüntü Üretimi
 
