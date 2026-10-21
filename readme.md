@@ -93,7 +93,6 @@ ComfyUI WebSocket bağlantısından gelen mesajları dinler. İlerleme, durum, k
 | POST | `/api/v1/comfy-ui/text-to-image/schemes/{scheme}/generate` | Seçilen şemayla görüntü üretimi başlatır. |
 | GET | `/api/v1/comfy-ui/image-to-image/schemes` | Görüntüden görüntü şemalarını listeler. |
 | POST | `/api/v1/comfy-ui/image-to-image/schemes/{scheme}/generate` | Kaynak görüntü ve maskeyle üretim başlatır. |
-| GET | `/api/v1/comfy-ui/text-to-video/schemes` | Metinden video şemalarını listeler. |
 | GET | `/api/v1/comfy-ui/images/{promptId}/view` | Üretim çıktısını PNG olarak döndürür. |
 
 ### 5.1. Metinden Görüntü Üretimi
@@ -205,7 +204,10 @@ WebSocket dinleyicisi tarafından aktarılan başlıca olaylar şunlardır:
 ### Uygulamanın test edildiği kurulum
 
 ComfyUI v0.3.44
+
 ComfyUI_frontend v1.23.4
+
 ComfyUI_desktop v0.4.55
+
 
 Üçüncü Taraf Yazılım: Bu proje, ComfyUI ile API'si üzerinden iletişim kurar. ComfyUI, GPL-3.0 lisansı altında lisanslanmış ayrı bir projedir. Bu proje, ComfyUI'nin veya kaynak kodunun mülkiyetinin kendisine ait olduğunu iddia etmez. ComfyUI'nin lisansı ve kullanım koşulları için ComfyUI deposunu inceleyebilirsiniz.
